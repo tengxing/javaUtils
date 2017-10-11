@@ -1,7 +1,4 @@
-package cn.sunny.house.util;
-
-import cn.sunny.house.model.Device;
-import net.sf.json.JSONObject;
+package cn.yjxxclub.api.util;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -10,7 +7,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Map;
 
 /**
  * Author: Starry.Teng
@@ -21,6 +17,11 @@ import java.util.Map;
  */
 public class HttpRequestUtil {
 
+    /**
+     * get请求
+     * @param url
+     * @return
+     */
     public static String sendGet(String url) {
         BufferedReader in = null;
         try {
@@ -59,7 +60,13 @@ public class HttpRequestUtil {
         return null;
     }
 
-    public static String jsonPost(String strURL, String params) {
+    /**
+     * post请求
+     * @param strURL
+     * @param params
+     * @return
+     */
+    public static String sendPost(String strURL, String params) {
         try {
             URL url = new URL(strURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -108,29 +115,10 @@ public class HttpRequestUtil {
         return null;
     }
 
-    private static String map2json(Map<String, Object> map) {
-        JSONObject jsonObject = JSONObject.fromObject(map);
-        return jsonObject.toString();
-    }
-
     public static void main(String[] args) {
-     /*   String url = "http://ngpool.crland.com.cn:6008/mbiAdmin/user/getUserPasswordById.do?userid=tengxing&sessionId=117AD3B8C1113DFD28C2DD85BC997026&callback=successCallback";
-        Map<String,Object> map = new HashedMap();
-        map.put("password","d41d8cd98f00b204e9800998ecf8427e");
-        System.out.println(jsonPost(url,map2json(map)));*/
-
-        String url = "http://www.teoform.com/com.obim.mq.service/message/send/json";
-        Device device = new Device();
-        device.setDeviceId("1000500259bb87fc00158d000193c18a");
-        device.setStatus1("1");
-        device.setStatus2("1");
-        device.setStatus3("1");
-        device.setStatus4("1");
-        device.setOnline("1");
-
-        String send = PushUtil.dataDevicePush(device,"烟感123","烟感类");
-        System.out.println(send);
-        String result = jsonPost(url, send);
+        String url = "http://api.laifudao.com/open/tupian.json";
+        String send = "";
+        String result = sendGet(url);
         System.out.println(result);
     }
 }
