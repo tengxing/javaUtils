@@ -1,27 +1,34 @@
-package cn.sunny.house.util;
+package cn.yjxxclub.music163.util;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+/**
+ * Author: Starry.Teng
+ * Email: tengxing7452@163.com
+ * Date: 17-10-31
+ * Time: 下午9:31
+ * Describe:
+ */
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
+import sun.misc.BASE64Decoder;
+import sun.misc.BASE64Encoder;
+
 /**
- * Author: Starry.Teng
- * Email: tengxing7452@163.com
- * Date: 17-9-15
- * Time: 上午10:02
- * Describe: AES-CBC-128加密工具类
+ * AES 是一种可逆加密算法，对用户的敏感信息加密处理
+ * 对原始数据进行AES加密后，在进行Base64编码转化；
+ * 正确
  */
 public class AesCBCUtil {
-    /*
+    /*已确认
     * 加密用的Key 可以用26个字母和数字组成
     * 此处使用AES-128-CBC加密模式，key需要为16位。
     */
-    private static String sKey="khGed59B63nx6E8J";
-    private static String ivParameter="cfbsdfgsdfxccvd1";
+    private static String sKey="010001";
+    private static String ivParameter="0102030405060708";
     private static AesCBCUtil instance=null;
+    //private static
     private AesCBCUtil(){
 
     }
@@ -31,20 +38,18 @@ public class AesCBCUtil {
         return instance;
     }
     // 加密
-    public static String encrypt(String sSrc, String encodingFormat, String sKey, String ivParameter) throws Exception {
+    public String encrypt(String sSrc, String encodingFormat, String sKey, String ivParameter) throws Exception {
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         byte[] raw = sKey.getBytes();
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
         IvParameterSpec iv = new IvParameterSpec(ivParameter.getBytes());//使用CBC模式，需要一个向量iv，可增加加密算法的强度
         cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
-
-
         byte[] encrypted = cipher.doFinal(sSrc.getBytes(encodingFormat));
         return new BASE64Encoder().encode(encrypted);//此处使用BASE64做转码。
     }
 
     // 解密
-    public static String decrypt(String sSrc, String encodingFormat, String sKey, String ivParameter) throws Exception {
+    public String decrypt(String sSrc, String encodingFormat, String sKey, String ivParameter) throws Exception {
         try {
             byte[] raw = sKey.getBytes("ASCII");
             SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
@@ -56,27 +61,22 @@ public class AesCBCUtil {
             String originalString = new String(original,encodingFormat);
             return originalString;
         } catch (Exception ex) {
-            System.out.println("error:"+ex.getMessage());
             return null;
         }
     }
 
     public static void main(String[] args) throws Exception {
         // 需要加密的字串
-        String cSrc = "www.yjxxclub.cn";
-        System.out.println(cSrc);
+        String cSrc = "123456";
+        System.out.println("加密前的字串是："+cSrc);
         // 加密
-        long lStart = System.currentTimeMillis();
         String enString = AesCBCUtil.getInstance().encrypt(cSrc,"utf-8",sKey,ivParameter);
         System.out.println("加密后的字串是："+ enString);
 
-        long lUseTime = System.currentTimeMillis() - lStart;
-        System.out.println("加密耗时：" + lUseTime + "毫秒");
+        System.out.println("1jdzWuniG6UMtoa3T6uNLA==".equals(enString));
+
         // 解密
-        lStart = System.currentTimeMillis();
         String DeString = AesCBCUtil.getInstance().decrypt(enString,"utf-8",sKey,ivParameter);
         System.out.println("解密后的字串是：" + DeString);
-        lUseTime = System.currentTimeMillis() - lStart;
-        System.out.println("解密耗时：" + lUseTime + "毫秒");
     }
 }
